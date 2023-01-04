@@ -2,7 +2,7 @@ require "rtesseract"
 require "securerandom"
 require "pathname"
 
-CHAR_BLACKLIST = "|=!/\\[]"
+CHAR_BLACKLIST = "|=!/\\[]©@®" # those will never be in the game's library pages
 
 PATTERNS_PARENT = SecureRandom.uuid.freeze
 
@@ -38,7 +38,7 @@ end
 
 class ImageStringExtractor < ImageTextExtractor
   def initialize(image_path)
-    super(image_path, psm: 3, lang: :eng)
+    super(image_path, psm: 7, oem: 1, lang: :eng)
   end
 
   def value
@@ -50,7 +50,7 @@ end
 
 class ImageIntegerExtractor < ImageTextExtractor
   def initialize(image_path)
-    super(image_path, config_file: :digits, psm: 7, lang: :eng)
+    super(image_path, config_file: :digits, psm: 7, oem: 1, lang: :eng)
   end
 
   def value
@@ -70,6 +70,7 @@ class ImageCategoryExtractor < ImageTextExtractor
       image_path,
       user_patterns: @categories_pattern_path.to_s,
       psm: 7,
+      oem: 1,
       lang: :eng
     )
   end
@@ -77,6 +78,10 @@ class ImageCategoryExtractor < ImageTextExtractor
   def value
     super
 
+    return @value = nil if @value.size < 5
+
     @value = @value.parameterize
+
+    @value
   end
 end
