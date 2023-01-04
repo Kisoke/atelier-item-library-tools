@@ -8,7 +8,6 @@ require "./utils/image_transformers"
 TEMP_IMAGES_DIR = "library/temp".freeze
 
 class ImageAttributeExtractor
-  attr_accessor :id
   attr_accessor :image
 
   def initialize(**kwargs)

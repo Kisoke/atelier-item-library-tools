@@ -1,4 +1,5 @@
 require "./utils/image_attribute_extractor"
+require "./utils/image_effect_extractor"
 
 class ImageItemExtractor
   def initialize(item_library_image_path, item_effects_library_image_path = nil)
@@ -26,6 +27,17 @@ class ImageItemExtractor
         )
 
       @item.send("#{attribute}=", attr_extractor.value)
+    end
+
+    ITEM_EFFECTS_EXTRACTION_CONFIG.each_key do |effect|
+      effect_extractor =
+        ImageAttributeExtractor.new(
+          image_path: @item_effects_image_path,
+          attribute: effect,
+          **ITEM_EFFECTS_EXTRACTION_CONFIG[effect]
+        )
+
+      @item.send("#{effect}=", effect_extractor.value)
     end
 
     @extracted = @item
