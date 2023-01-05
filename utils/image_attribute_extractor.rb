@@ -31,6 +31,10 @@ class ImageAttributeExtractor
         ImageIntegerExtractor
       when :category
         ImageCategoryExtractor
+      when :effect
+        ImageEffectExtractor
+      when :effectlevel
+        ImageEffectLevelExtractor
       else
         ImageStringExtractor
       end

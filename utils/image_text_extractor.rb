@@ -29,6 +29,10 @@ class ImageTextExtractor
     @extracted ||= RTesseract.new(@image_path.to_s, **@options.to_h)
   end
 
+  def extract!
+    RTesseract.new(@image_path.to_s, **@options.to_h)
+  end
+
   def value
     extract unless @extracted
 
@@ -83,5 +87,43 @@ class ImageCategoryExtractor < ImageTextExtractor
     @value = @value.parameterize
 
     @value
+  end
+end
+
+class ImageEffectExtractor < ImageTextExtractor
+  def initialize(image_path)
+    super(image_path, psm: 4, oem: 1, lang: :eng)
+  end
+
+  def value
+    super
+
+    byebug if @value.empty?
+
+    @value.split("\n").filter(&:present?)
+  end
+end
+
+class ImageEffectLevelExtractor < ImageTextExtractor
+  LEVELS_PATTERN = "Lv.\d\*"
+
+  def initialize(image_path)
+    @levels_pattern_path = write_pattern(LEVELS_PATTERN, "levels")
+
+    super(
+      image_path,
+      user_patterns: @levels_pattern_path,
+      psm: 6,
+      oem: 1,
+      lang: :eng
+    )
+  end
+
+  def value
+    super
+
+    byebug if @value.empty?
+
+    @value.split("\n").filter(&:present?)
   end
 end
