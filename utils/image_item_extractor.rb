@@ -1,5 +1,4 @@
 require "./utils/image_attribute_extractor"
-require "./utils/image_effect_extractor"
 
 class ImageItemExtractor
   def initialize(item_library_image_path, item_effects_library_image_path = nil)
