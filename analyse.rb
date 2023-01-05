@@ -19,27 +19,32 @@ require "./utils/image_item_extractor"
 FileUtils.rm_rf(TEMP_IMAGES_DIR)
 Dir.mkdir(TEMP_IMAGES_DIR)
 
-def with_library_item_entries
+def with_library_item_entries(parent_dir)
+  parent_path = Pathname.new("library/#{parent_dir}")
+
   entries =
     Dir
-      .entries("library")
+      .entries(parent_path.to_s)
       .filter { |entry| entry.split(".").last }
-      .map { |file_name| Pathname.new("library/#{file_name}") }
+      .map { |file_name| Pathname.new("#{parent_path}/#{file_name}") }
       .filter { |path| path.file? && path.extname == ".png" }
-      .each do |image_path|
-        filename = image_path.basename.to_s.split(".").first
-        effects_image_path =
-          if File.exists?("library/#{filename}.effects")
-            Pathname.new("library/#{filename}.effects").realpath
-          end
 
-        yield(image_path, effects_image_path)
+  entries.each.with_index do |image_path, index|
+    next if index.odd? && parent_dir.inquiry.mix?
+
+    filename = image_path.basename.to_s.split(".").first
+    effects_image_path =
+      if parent_dir.inquiry.mix?
+        Pathname.new("#{entries[index + 1]}").realpath
       end
+
+    yield(image_path, effects_image_path)
+  end
 end
 
 @extracted_items = []
 
-with_library_item_entries do |item_image_path, item_effects_image_path|
+with_library_item_entries("mix") do |item_image_path, item_effects_image_path|
   extractor = ImageItemExtractor.new(item_image_path, item_effects_image_path)
 
   @extracted_items.push(extractor.value)
