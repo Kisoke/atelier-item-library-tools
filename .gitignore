@@ -3,3 +3,5 @@ library
 .byebug_history
 config.json
 config.rb
+out.txt
+test.png
