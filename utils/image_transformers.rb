@@ -44,4 +44,24 @@ module ImageTransformers
       )
     end
   end
+
+  class Modulate < Transform
+    def initialize(percentage: 50)
+      super
+    end
+
+    def apply(image)
+      image.modulate(@options.percentage / 100.0)
+    end
+  end
+
+  class Threshold < Transform
+    def initialize(threshold: 32_000)
+      super
+    end
+
+    def apply(image)
+      image.threshold(@options.threshold)
+    end
+  end
 end
