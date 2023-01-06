@@ -44,12 +44,6 @@ class ImageStringExtractor < ImageTextExtractor
   def initialize(image_path)
     super(image_path, psm: 7, oem: 1, lang: :eng)
   end
-
-  def value
-    super
-
-    @value = @value.parameterize
-  end
 end
 
 class ImageIntegerExtractor < ImageTextExtractor
@@ -84,8 +78,6 @@ class ImageCategoryExtractor < ImageTextExtractor
 
     return @value = nil if @value.size < 5
 
-    @value = @value.parameterize
-
     @value
   end
 end
@@ -97,8 +89,6 @@ class ImageEffectExtractor < ImageTextExtractor
 
   def value
     super
-
-    byebug if @value.empty?
 
     @value.split("\n").filter(&:present?)
   end
@@ -121,8 +111,6 @@ class ImageEffectLevelExtractor < ImageTextExtractor
 
   def value
     super
-
-    byebug if @value.empty?
 
     @value.split("\n").filter(&:present?)
   end

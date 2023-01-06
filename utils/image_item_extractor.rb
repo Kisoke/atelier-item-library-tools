@@ -60,7 +60,7 @@ class ImageItemExtractor
           **config[config_key]
         )
 
-      @item.send("#{effect}=", effect_extractor.value)
+      @item.send("#{config_key}=", effect_extractor.value)
     end
   end
 end
