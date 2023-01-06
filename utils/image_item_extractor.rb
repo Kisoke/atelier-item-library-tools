@@ -17,27 +17,10 @@ class ImageItemExtractor
   def extract
     return @extracted if @extracted
 
-    ITEM_ATTRIBUTES_EXTRACTION_CONFIG.each_key do |attribute|
-      attr_extractor =
-        ImageAttributeExtractor.new(
-          image_path: @item_image_path,
-          attribute: attribute,
-          **ITEM_ATTRIBUTES_EXTRACTION_CONFIG[attribute]
-        )
+    extract_item_attributes
 
-      @item.send("#{attribute}=", attr_extractor.value)
-    end
-
-    ITEM_EFFECTS_EXTRACTION_CONFIG.each_key do |effect|
-      effect_extractor =
-        ImageAttributeExtractor.new(
-          image_path: @item_effects_image_path,
-          attribute: effect,
-          **ITEM_EFFECTS_EXTRACTION_CONFIG[effect]
-        )
-
-      @item.send("#{effect}=", effect_extractor.value)
-    end
+    extract_item_recipe if @item_effects_image_path.present?
+    extract_item_effects if @item_effects_image_path.present?
 
     @extracted = @item
   end
@@ -46,5 +29,38 @@ class ImageItemExtractor
     extract unless @extracted
 
     @item
+  end
+
+  private
+
+  def extract_item_attributes
+    extract_with_configuration(
+      @item_image_path,
+      ITEM_ATTRIBUTES_EXTRACTION_CONFIG
+    )
+  end
+
+  def extract_item_recipe
+    extract_with_configuration(@item_image_path, ITEM_RECIPE_EXTRACTION_CONFIG)
+  end
+
+  def extract_item_effects
+    extract_with_configuration(
+      @item_effects_image_path,
+      ITEM_EFFECTS_EXTRACTION_CONFIG
+    )
+  end
+
+  def extract_with_configuration(source_image, config)
+    config.each_key do |config_key|
+      effect_extractor =
+        ImageAttributeExtractor.new(
+          image_path: source_image,
+          attribute: config_key,
+          **config[config_key]
+        )
+
+      @item.send("#{effect}=", effect_extractor.value)
+    end
   end
 end
