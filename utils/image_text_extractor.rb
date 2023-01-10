@@ -115,3 +115,7 @@ class ImageEffectLevelExtractor < ImageTextExtractor
     @value.split("\n").filter(&:present?)
   end
 end
+
+def tesseract_version
+  `tesseract --version`.split("\n").first
+end
