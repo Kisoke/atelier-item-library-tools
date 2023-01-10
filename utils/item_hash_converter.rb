@@ -11,7 +11,8 @@ class ItemHashConverter
       name: name,
       level: level,
       value: value,
-      categories: categories
+      categories: categories,
+      recipe: recipe
     }
   end
 
@@ -22,19 +23,19 @@ class ItemHashConverter
   private
 
   def id
-    @item_struct.name.parameterize
+    @id ||= @item_struct.name.parameterize.to_sym
   end
 
   def name
-    @item_struct.name
+    @name ||= @item_struct.name
   end
 
   def level
-    @item_struct.level
+    @level ||= @item_struct.level
   end
 
   def value
-    @item_struct.value
+    @value ||= @item_struct.value
   end
 
   def innate_categories
@@ -66,6 +67,30 @@ class ItemHashConverter
   end
 
   def categories
-    innate_categories + optional_categories
+    @categories ||= innate_categories + optional_categories
+  end
+
+  def materials
+    @materials ||= (0...4).map { |n| @item_struct.send("material#{n}") }
+  end
+
+  def recipe_items
+    materials
+      .reject { |s| s.start_with? "(" }
+      .map(&:parameterize)
+      .to_h { |item_id| [item_id.to_sym, { id: item_id, amount: 1 }] }
+  end
+
+  def recipe_categories
+    materials
+      .select { |s| s.start_with? "(" }
+      .map(&:parameterize)
+      .to_h do |category_id|
+        [category_id.to_sym, { id: category_id, amount: 1 }]
+      end
+  end
+
+  def recipe
+    { id: id, items: recipe_items, categories: recipe_categories }
   end
 end
