@@ -7,3 +7,5 @@ library_extractor_config.json
 library_extractor_config.rb
 out.txt
 test.png
+items.json
+recipes.json
