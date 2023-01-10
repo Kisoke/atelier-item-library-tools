@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 # typed: true
 require "rubygems"
 require "bundler/setup"
@@ -13,11 +14,22 @@ require "json"
 
 require "byebug"
 
-require "./utils/config"
+require "./utils/library_extractor_config"
 require "./utils/image_item_extractor"
+require "./utils/item_hash_converter"
 
-FileUtils.rm_rf(TEMP_IMAGES_DIR)
-Dir.mkdir(TEMP_IMAGES_DIR)
+SCRIPT_VERSION = "0.1.0"
+SCRIPT_URL = "https://script-url.example.com"
+
+def credits_hash
+  {
+    generated: Time.now.to_s,
+    tesseract_version: tesseract_version,
+    script: SCRIPT_URL,
+    script_version: SCRIPT_VERSION,
+    ruby_version: `ruby -v`.strip
+  }
+end
 
 def with_library_item_entries(parent_dir)
   parent_path = Pathname.new("library/#{parent_dir}")
@@ -42,14 +54,29 @@ def with_library_item_entries(parent_dir)
   end
 end
 
-@extracted_items = []
+def library_extract
+  # remove old tempfiles
+  FileUtils.rm_rf(TEMP_IMAGES_DIR)
+  Dir.mkdir(TEMP_IMAGES_DIR)
 
-with_library_item_entries("mix") do |item_image_path, item_effects_image_path|
-  extractor = ImageItemExtractor.new(item_image_path, item_effects_image_path)
+  @extracted_items = []
 
-  @extracted_items.push(extractor.value)
+  with_library_item_entries("mix") do |item_image_path, item_effects_image_path|
+    extractor = ImageItemExtractor.new(item_image_path, item_effects_image_path)
+
+    @extracted_items.push(extractor.value)
+  end
+
+  @converted_items =
+    @extracted_items.map { |item| ItemHashConverter.new(item).to_h }
+
+  @recipes = @converted_items.to_h { |item| [item[:id], item.delete(:recipe)] }
+
+  File.write("recipes.json", { items: @recipes, credits: credits_hash }.to_json)
+  File.write(
+    "items.json",
+    { items: @converted_items, credits: credits_hash }.to_json
+  )
 end
 
-byebug
-
-lol = "mdr"
+library_extract
