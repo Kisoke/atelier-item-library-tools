@@ -39,21 +39,17 @@ class ItemHashConverter
   end
 
   def innate_categories
-    [
-      @item_struct.category0,
-      @item_struct.category1,
-      @item_struct.category2,
-      @item_struct.category3
-    ].compact.map { |cat_string| category_from_cat_string cat_string }
+    (0...4)
+      .map { |n| @item_struct.send("category#{n}") }
+      .filter_map { |cat_string| category_from_cat_string cat_string }
   end
 
   def optional_categories
-    [
-      @item_struct.effect0,
-      @item_struct.effect1,
-      @item_struct.effect2,
-      @item_struct.effect3
-    ].filter { |eff| eff.any? { |eff_s| eff_s.start_with?("Add (") } }
+    (0...4)
+      .map { |n| @item_struct.send("effect#{n}") }
+      .filter do |eff|
+        eff.present? && eff.any? { |eff_s| eff_s.start_with?("Add (") }
+      end
       .flat_map
       .with_index do |eff, index|
         eff.map do |eff_string|
@@ -63,6 +59,8 @@ class ItemHashConverter
   end
 
   def category_from_cat_string(cat_string, slot: nil)
+    return if cat_string.nil?
+
     { id: cat_string.parameterize, name: cat_string[1..-2], slot: slot }.compact
   end
 
