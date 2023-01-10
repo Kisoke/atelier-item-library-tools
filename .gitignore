@@ -1,11 +1,5 @@
 data
 library
 .byebug_history
-config.json
-config.rb
-library_extractor_config.json
-library_extractor_config.rb
-out.txt
-test.png
-items.json
-recipes.json
+config
+out
