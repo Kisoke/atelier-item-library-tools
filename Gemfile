@@ -7,6 +7,7 @@ gem 'activesupport'
 
 gem 'rtesseract'
 gem 'rmagick'
+gem 'slop'
 
 gem 'byebug', :group => :development
 gem "ruby-lsp", "~> 0.3.7", :group => :development

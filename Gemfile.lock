@@ -22,6 +22,7 @@ GEM
       language_server-protocol (~> 3.17.0)
       sorbet-runtime
       syntax_tree (>= 4.0.2, < 5.0.0)
+    slop (4.9.3)
     sorbet-runtime (0.5.10600)
     syntax_tree (4.3.0)
       prettier_print (>= 1.0.2)
@@ -38,6 +39,7 @@ DEPENDENCIES
   rmagick
   rtesseract
   ruby-lsp (~> 0.3.7)
+  slop
 
 BUNDLED WITH
    2.3.22
