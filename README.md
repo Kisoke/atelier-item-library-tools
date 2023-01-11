@@ -31,6 +31,18 @@ Ideal cropped pictures are as follows :
 
 If you need to change the structure of the data (output a XML instead of a JSON file), you can write your own output processor, and use it in `library.rb`.
 
+Script is untested against other Atelier games, but should work fine as long as items & library pages follow these rules :
+- 4 effects max per item
+- 4 innate categories max per item (innate as in, not dependent from a synthesis recipe)
+- 4 materials max per item
+- Library page has name, level, value, categories, materials (for synthesised items)
+- Library pages for synthesised items have an effects page
+
+xmldata.rb
+---
+
+Extracts data from game XML files. Unfinished. Do not use this.
+
 Disclaimers
 ===========
 
