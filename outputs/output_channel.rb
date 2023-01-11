@@ -1,6 +1,6 @@
 module Outputs
   class OutputChannel
-    OUTPUT_DIR = "./out"
+    OUTPUT_DIR = ::OUTPUT_FOLDER
 
     def self.make_metadata
       {
@@ -12,7 +12,7 @@ module Outputs
     end
 
     def self.create_output_dir
-      Dir.mkdir OUTPUT_DIR unless Dir.exists?("./out")
+      Dir.mkdir OUTPUT_DIR unless Dir.exists?(OUTPUT_DIR)
     end
   end
 end
