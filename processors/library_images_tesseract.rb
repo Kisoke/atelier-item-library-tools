@@ -3,7 +3,7 @@ require "./processors/library_images_tesseract/image_item_extractor"
 
 module Processors
   module LibraryImagesTesseract
-    TEMP_IMAGES_DIR = "library/temp".freeze
+    TEMP_IMAGES_DIR = "#{INPUT_FOLDER}/temp".freeze
 
     def self.process(entries)
       processed = []

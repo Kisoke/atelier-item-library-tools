@@ -5,7 +5,7 @@ require "active_support/core_ext/string/inquiry"
 
 module Inputs
   class LibraryImagesFolder
-    TEMP_IMAGES_DIR = "library/temp".freeze
+    TEMP_IMAGES_DIR = "#{INPUT_FOLDER}/temp".freeze
 
     def self.with_library_item_entries(parent_dir)
       parent_path = Pathname.new("library/#{parent_dir}")
