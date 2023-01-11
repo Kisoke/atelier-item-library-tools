@@ -6,7 +6,7 @@ require "bundler/setup"
 require "fileutils"
 require "byebug"
 
-SCRIPT_VERSION = "0.1.0"
+SCRIPT_VERSION = "1.0.0"
 SCRIPT_URL = "https://github.com/Kisoke/atelier-item-library-tools"
 
 # options parser
