@@ -43,6 +43,11 @@ xmldata.rb
 
 Extracts data from game XML files. Unfinished. Do not use this.
 
+Licence
+=======
+
+[GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)
+
 Disclaimers
 ===========
 
